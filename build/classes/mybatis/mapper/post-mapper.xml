@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="post">
+	<!-- 게시글 N개 보기 -->
+	<select id="findByPostAtoB" resultType="data.Post" parameterType="hashmap">
+		SELECT * FROM
+		(SELECT ROWNUM RN, t.* FROM
+			(SELECT * FROM POSTS ORDER BY DATES DESC) t
+		) WHERE RN BETWEEN #{a} AND #{b}
+	</select>
+	
+	<!-- 게시글 정렬보기 -->
+	<select id="findByPostAtoBSort" resultType="data.Post" parameterType="hashmap">
+		SELECT * FROM
+		(SELECT ROWNUM RN, t.* FROM
+			(SELECT * FROM POSTS ORDER BY 
+			<choose>
+				<when test="sort != null">
+				 #{sort}
+				</when>
+				<otherwise>
+				 dates
+				</otherwise>
+			</choose> DESC) t
+		) WHERE RN BETWEEN #{a} AND #{b}
+	</select>
+	
+	<!-- 특정 게시글 가져오기 -->
+	<select id="findByPost" resultType="data.Post" parameterType="string" >
+		SELECT * FROM POSTS WHERE ID=#{id}
+	</select>
+	
+	<!-- 게시글 전체 갯수 가져오기 -->
+	<select id="countPost" resultType="int">
+		SELECT COUNT(*) FROM POSTS
+	</select>
+	
+	<!-- 전체 게시글 추천수 가져오기 -->
+	<select id="findByLikeAll"  resultType="data.Like">
+		SELECT id, COUNT(*) AS LIKE_CNT FROM LIKES GROUP BY id
+	</select>
+	
+	<!-- 특정 게시글 추천수 가져오기 -->
+	<select id="findByLike" resultType="data.Like" parameterType="String">
+		SELECT id, COUNT(*) AS LIKE_CNT FROM LIKES WHERE id=#{id} GROUP BY id
+	</select>
+	
+	<!-- 게시글 추천인 가져오기 -->
+	<select id="findByLikeUserAll" resultType="data.Like">
+		SELECT * FROM LIKES
+	</select>
+	
+	<!-- 해당게시글 추천인 가져오기 -->
+	<select id="findByLikeUser" resultType="data.Like" parameterType="String">
+		SELECT * FROM LIKES WHERE ID=#{id}
+	</select>
+	
+	<!-- 게시글 등록 -->
+	<insert id="create" parameterType="hashmap">
+		INSERT INTO
+		POSTS(ID, TITLE, CONTENT, USER_ID
+		<if test="userpass != null">
+			,USER_PASS
+		</if>
+		)
+		VALUES(#{id}, #{title}, #{content}, #{userid} 
+		<if test="userpass != null">
+			,#{userpass}
+		</if>
+		)
+	</insert>
+	
+	<!-- 추천수 올리기 -->
+	<insert id="createLike" parameterType="hashmap">
+		INSERT INTO LIKES(ID, USER_ID) VALUES(#{id}, #{userid})
+	</insert>
+	
+	<!-- 조회수 올리기 -->
+	<update id="updateViews" parameterType="String">
+		UPDATE POSTS SET VIEWS = VIEWS + 1 WHERE ID = #{id}
+	</update>
+	
+	<!-- 게시글 삭제 -->
+	<delete id="deletePost" parameterType="String">
+		DELETE FROM POSTS WHERE ID=#{id}
+	</delete>
+	
+	<!-- 게시글 수정 -->
+	<update id="updatePost" parameterType="hashmap">
+		UPDATE POSTS SET TITLE=#{title}, CONTENT=#{content}, 
+		USER_ID=#{userid}
+		<if test="userpass != null">
+		, USER_PASS=#{userpass}
+		</if> 
+		WHERE ID=#{id}
+	</update>
+</mapper>
