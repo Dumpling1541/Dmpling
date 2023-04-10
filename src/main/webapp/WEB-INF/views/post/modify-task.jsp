@@ -30,29 +30,31 @@
 		</div>
 		<div class="title">
 			<h3>디지털컨버전스 - 공공데이터융합 자바 웹개발자 양성 과정</h3>
-			<h4>개발공부를 하면서 몰랐던 것이나 고민이 있다면 글을 남겨주세요</h4>
+			<h4>게시글 수정</h4>
 		</div>
-		<%-- 글쓰기 --%>
+		
+		<%-- 글수정 --%>
 		<div>
-			<form action="/post/post-task" method="post" class="board_write">
+			<form action="/post/update" method="post" class="board_write">
+				<input type="hidden" name="id" value="${modifyPost.id}">
 				<c:choose>
 					<c:when test="${sessionScope.logon}">
 					</c:when>
 					<c:otherwise>
 						<div class="post_login">
-							<input type="text" name="userid" placeholder="아이디"> 
-							<input type="password" name="userpass" placeholder="비밀번호">
+							<input type="text" name="userid" value="${modifyPost.userId}"> 
+							<input type="password" name="userpass" value="${modifyPost.userPass}">
 						</div>
 					</c:otherwise>
 				</c:choose>
 				<div>
-					<input type="text" name="title" placeholder="제목을 입력하세요.">
+					<input type="text" name="title" placeholder="제목을 입력하세요." value="${modifyPost.title}">
 				</div>
 				<textarea class="comment_formta" name="content" rows="8" cols="80"
-					placeholder="내용을 입력하세요."></textarea>
+					placeholder="내용을 입력하세요.">${modifyPost.content}</textarea>
 				<div class="post_btn">
-					<a href="/post/post-list"><button type="button">취소</button></a> <a><button
-							type="submit">등록</button></a>
+					<a href="/post/post-list"><button type="button">취소</button></a> 
+					<a><button type="submit">수정</button></a>
 				</div>
 			</form>
 		</div>

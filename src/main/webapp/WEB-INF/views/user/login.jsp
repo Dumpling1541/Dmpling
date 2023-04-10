@@ -10,23 +10,23 @@
 <link rel="stylesheet" href="/resource/css/style.css" />
 </head>
 <body>
-	<div class="root login_area">
-		<form action="/user/login-task" method="post" class="join-form">
+	<div>
+		<form action="/user/login-task" method="post">
 			<h2>#로그인</h2>
 			<div class="user_input">
 			    <label>아이디</label>
 				<input type="text" placeholder="아이디" name="id" value="${idsave }"
-					class="join-input" required />
+				 required />
 			</div>
 			<div class="user_input">
 			    <label>비밀번호</label>
-				<input type="password" placeholder="비밀번호" name="pass" class="join-input" />
+				<input type="password" placeholder="비밀번호" name="pass" />
 			</div>
 			<c:if test="${error eq 1}">
 				<p class="error_text" style="color: red">로그인에 실패하였습니다.</p>
 			</c:if>
 			<div>
-				<button type="submit" class="join-btn">다음</button>
+				<button type="submit">다음</button>
 			</div>
 		</form>
 	</div>
